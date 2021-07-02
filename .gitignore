@@ -3,3 +3,4 @@
 *.csv
 videos/
 *tfevents*
+!tiempos_ejecucion.csv
