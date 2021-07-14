@@ -2,6 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import make_interp_spline
+import pandas as pd
 
 
 PPO = 'red'
@@ -52,16 +53,19 @@ for ngame in range(len(games)):
             color = A2C
         elif algoritmo == 'DQN':
             color = DQN
-        plt.plot(xnew, y_smooth, color, label=algoritmo)
+        plt.plot(xnew, y_smooth, color, label=algoritmo, alpha=0.2)
+        plt.plot(xnew, pd.Series(y_smooth).rolling(
+            100, min_periods=0).mean(), color, label=algoritmo + ' suavizado')
+        
 
     entorno = str(evaluation_files[ngame*(len(games)-1)]).split('\\')[2][:-2]
     plt.suptitle('Comparativa de algoritmos en el entorno ' + entorno)
     plt.xlabel("Ciclo de entrenamiento")
     plt.ylabel("Recompensa obtenida")
-    plt.legend(loc='lower right')
+    plt.legend(loc='upper left')
     try:
         os.makedirs(PLOTS_DIR)
         print("Directory ", PLOTS_DIR,  " Created ")
     except FileExistsError:
         print("Directory ", PLOTS_DIR,  " already exists")
-    plt.savefig(PLOTS_DIR + entorno + '.png', transparent=True, dpi=1000)
+    plt.savefig(PLOTS_DIR + entorno + '.png', transparent=True, dpi=100)
